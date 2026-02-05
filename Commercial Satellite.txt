@@ -1,0 +1,113 @@
+Use sai;
+INSERT INTO `sai`.`Company` (`idCompany`, `Name`, `Headqarters`, `Headquarters state`) 
+VALUES (4, 'SES', 'Dallas', 'Texas');
+Select * from Company;
+Select distinct(country) from state;
+Select * from Sales where `Margin(in million)` >= 100;
+selectidOrder, year(`service end date`)-year(`service started date`)
+as `number of years` from service_details;
+select  Name as `country name ` , `Headquarters state`, `continent`
+from Company inner join state where Company.`Headquarters state` = state.state ;
+select Sales.idOrder,`Margin(in million)`,
+Maintainance_info.` margin (in thousands)` as ` margin (in thousands) per year` 
+from Sales inner join Maintainance_info where Sales.idOrder = Maintainance_info.idOrder;
+
+select * from Order_info where idOrder in ( select idOrder from requests_info);
+
+selectCompany_idCompany as `company id`,count(Company_idCompany) as services
+from  Production_table group by Company_idCompany having services >1;
+
+select max(capacity) as `highest maximum capacity` from Production_table;
+ create table Years_of_service select idOrder,if( year(`service end date`) is null,2022-year(`service started date`),year(`service end date`)-year(`service started date`))
+as `number of years` from service_details;
+select * from Years_of_service;
+
+select `idBusinessclient`,if( year(`service end date`) is null,2022-year(`service started date`),
+year(`service end date`)-year(`service started date`))
+as `number of years`,
+ `Maintainancecost per year(in thousands)`*if( year(`service end date`) is null,2022-year(`service started date`),
+year(`service end date`)-year(`service started date`)) as `total maintainance cost`,
+ `Net charged(in million)`*1000+ `Maintainancecost per year(in thousands)`*if( year(`service end date`) is null,2022-year(`service started date`),
+year(`service end date`)-year(`service started date`)) as `total cost in thousand`
+fromOrder_info inner join Maintainance_info inner join  service_details inner join Sales
+whereOrder_info.idOrder = Maintainance_info.idOrder and Order_info.idOrder=service_details.idOrder and Order_info.idOrder=Sales.idOrder;
+
+create table total_cost  select `idBusinessclient`,if( year(`service end date`) is null,2022-year(`service started date`),
+year(`service end date`)-year(`service started date`))
+as `number of years`,
+ `Maintainancecost per year(in thousands)`*if( year(`service end date`) is null,2022-year(`service started date`),
+year(`service end date`)-year(`service started date`)) as `total maintainance cost`,
+ `Net charged(in million)`*1000+ `Maintainancecost per year(in thousands)`*if( year(`service end date`) is null,2022-year(`service started date`),
+year(`service end date`)-year(`service started date`)) as `total cost in thousand`
+fromOrder_info inner join Maintainance_info inner join  service_details inner join Sales
+whereOrder_info.idOrder = Maintainance_info.idOrder and Order_info.idOrder=service_details.idOrder and Order_info.idOrder=Sales.idOrder;
+select * from total_cost;
+create table totals1 select `idBusiness client`, sum(`total cost in thousand`) as `total cost` from total_cost  group by `idBusiness client`;
+select * from totals1;
+create table requests_per_order select idOrder,sum(`Amount Charged(in  thousands)`) as `sum of charges for each order` from requests_info group by idOrder;
+select * from requests_per_order;
+create table total_charges_includiing_requestcharge select  `idBusiness client`,
+if(`idBusiness client` in (select idOrder from requests_per_order), `total cost` +
+ `sum of charges for each order` , `total cost`) as `total cost in thousands including request charges` from totals1 
+left  joinrequests_per_order
+on totals1.`idBusiness client`= requests_per_order.idOrder;
+select * from total_charges_includiing_requestcharge;
+select `client name`, `total cost in thousands including request charges` from Business_client
+inner join total_charges_includiing_requestcharge
+where Business_client.`idBusiness client`= total_charges_includiing_requestcharge.`idBusiness client`;
+
+ Drop table total_cost;
+delete from state where state.state ="Australia";
+select * from state;
+
+
+
+file 2
+
+
+
+use sai;
+INSERT INTO `sai`.`Company` (`idCompany`, `Name`, `Headqarters`, `Headquarters state`) 
+VALUES (4, 'SES', 'Dallas', 'Texas');
+Select * from Company;
+Select distinct(country) from state;
+Select * from Sales where `Margin(in million)` >= 100;
+selectidOrder, year(`service end date`)-year(`service started date`)
+as `number of years` from service_details;
+select  Name as `country name ` , `Headquarters state`, `continent`
+from Company inner join state where Company.`Headquarters state` = state.state ;
+select Sales.idOrder,`Margin(in million)`,
+Maintainance_info.` margin (in thousands)` as ` margin (in thousands) per year` 
+from Sales inner join Maintainance_info where Sales.idOrder = Maintainance_info.idOrder;
+
+select * from Order_info where idOrder in ( select idOrder from requests_info);
+
+selectCompany_idCompany as `company id`,count(Company_idCompany) as services
+from  Production_table group by Company_idCompany having services >1;
+
+select max(capacity) as `highest maximum capacity` from Production_table;
+select if( year(`service end date`) is null,2022-year(`service started date`),year(`service end date`)-year(`service started date`))
+as `number of years` from service_details;
+
+select `idBusinessclient`,if( year(`service end date`) is null,2022-year(`service started date`),
+year(`service end date`)-year(`service started date`))
+as `number of years`,
+ `Maintainancecost per year(in thousands)`*if( year(`service end date`) is null,2022-year(`service started date`),
+year(`service end date`)-year(`service started date`)) as `total maintainance cost`,
+ `Net charged(in million)`*1000+ `Maintainancecost per year(in thousands)`*if( year(`service end date`) is null,2022-year(`service started date`),
+year(`service end date`)-year(`service started date`)) as `total cost in thousand`
+fromOrder_info inner join Maintainance_info inner join  service_details inner join Sales
+whereOrder_info.idOrder = Maintainance_info.idOrder and Order_info.idOrder=service_details.idOrder and Order_info.idOrder=Sales.idOrder;
+
+create table total_cost  select `idBusinessclient`,if( year(`service end date`) is null,2022-year(`service started date`),
+year(`service end date`)-year(`service started date`))
+as `number of years`,
+ `Maintainancecost per year(in thousands)`*if( year(`service end date`) is null,2022-year(`service started date`),
+year(`service end date`)-year(`service started date`)) as `total maintainance cost`,
+ `Net charged(in million)`*1000+ `Maintainancecost per year(in thousands)`*if( year(`service end date`) is null,2022-year(`service started date`),
+year(`service end date`)-year(`service started date`)) as `total cost in thousand`
+fromOrder_info inner join Maintainance_info inner join  service_details inner join Sales
+whereOrder_info.idOrder = Maintainance_info.idOrder and Order_info.idOrder=service_details.idOrder and Order_info.idOrder=Sales.idOrder;
+
+create table totals1 select `idBusiness client`, sum(`total cost in thousand`) as `total cost` from total_cost  group by `idBusiness client`;
+select  `total cost` + `Amount Charged(in  thousands)` from totals1 left  join requests_info on
